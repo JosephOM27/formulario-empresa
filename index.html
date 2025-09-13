@@ -43,18 +43,27 @@
     form.addEventListener('submit', async function (e) {
       e.preventDefault();
 
-      const formData = new URLSearchParams(new FormData(form));
-      formData.append("access_key", "Prueba_123"); // Tu clave
+      // Convertir los datos del formulario a URLSearchParams
+      const formData = new FormData(form);
+      const params = new URLSearchParams();
+
+      for (const [key, value] of formData.entries()) {
+        params.append(key, value);
+      }
+
+      // Agregar la clave de acceso
+      params.append("access_key", "Prueba_123");
 
       try {
         const response = await fetch("https://script.google.com/macros/s/AKfycbwWT0QLnpB0qQgY1oWS0aPFVEyGIGLaSZKAPhOWxt8X3JU63COXKQFTY7u7xdQQsLSNoA/exec", {
           method: "POST",
           headers: {
-            "Content-Type": "application/x-www-form-urlencoded" // 👈 clave para que Google lo entienda correctamente
+            "Content-Type": "application/x-www-form-urlencoded"
           },
-          body: formData.toString() // 👈 convertir a string porque es URLSearchParams
+          body: params.toString()
         });
 
+        // Intentar convertir la respuesta a JSON
         const data = await response.json();
 
         if (data.status === "success") {
@@ -69,6 +78,7 @@
       } catch (error) {
         respuesta.textContent = "❌ Error al enviar: " + error.message;
         respuesta.className = "error";
+        console.error("Error en fetch:", error); // Ayuda en consola para depuración
       }
     });
   </script>
