@@ -1,90 +1,44 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Formulario - Empresa</title>
-  <style>
-    body {
-      font-family: Arial, Helvetica, sans-serif;
-      max-width: 700px;
-      margin: 30px auto;
-      padding: 0 16px;
-    }
-    label {
-      display: block;
-      margin: 10px 0;
-    }
-    input, textarea {
-      width: 100%;
-      padding: 8px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-    }
-    button {
-      padding: 10px 14px;
-      border: none;
-      border-radius: 6px;
-      background: #0b74de;
-      color: white;
-      font-weight: 600;
-      cursor: pointer;
-    }
-    #status {
-      margin-top: 12px;
-      font-weight: 600;
-    }
-  </style>
+  <meta charset="UTF-8">
+  <title>Prueba Fetch</title>
 </head>
 <body>
-  <h2>Ingreso de datos</h2>
-  <form id="myForm">
-    <label>Nombre
-      <input id="name" name="name" required />
-    </label>
-    <label>Email
-      <input id="email" name="email" type="email" required />
-    </label>
-    <label>Teléfono
-      <input id="phone" name="phone" />
-    </label>
-    <label>Comentario
-      <textarea id="note" name="note" rows="3"></textarea>
-    </label>
-    <label>Clave de acceso
-      <input id="access_key" name="access_key" type="password" required placeholder="Ingresa la clave" />
-    </label>
-    <button type="submit">Enviar</button>
-  </form>
-
-  <div id="status"></div>
+  <h1>Prueba de conexión</h1>
+  <button onclick="probarGet()">Probar GET</button>
+  <button onclick="probarPost()">Probar POST</button>
 
   <script>
-async function enviarDatos() {
-  const data = {
-    nombre: document.getElementById("nombre").value,
-    email: document.getElementById("email").value,
-    mensaje: document.getElementById("mensaje").value
-  };
+    const URL = "https://script.google.com/macros/s/AKfycbxnH7kDHQG2S9s_rgJkc8_46uzRXpwz4aILr4_F51RTnDfHDwXCYBSkxUIbF_2VpqiHhA/exec"; // pega tu URL
 
-  try {
-    const response = await fetch("https://script.google.com/macros/s/AKfycbyDJsheHSXGp4vqPnKBJVnZW9g5SQ8-N1HcRqOqxy2UdN7DC73aBut7vnvg52l-g35oRA/exec", {
-      method: "POST",
-      body: JSON.stringify(data),
-      headers: {
-        "Content-Type": "application/json"
+    async function probarGet() {
+      try {
+        const res = await fetch(URL);
+        const data = await res.json();
+        console.log("✅ Respuesta GET:", data);
+        alert("GET OK: " + JSON.stringify(data));
+      } catch (err) {
+        console.error("❌ Error GET:", err);
+        alert("Error GET: " + err);
       }
-    });
+    }
 
-    const result = await response.json();
-    console.log(result);
-    alert(result.message);
-
-  } catch (error) {
-    console.error("❌ Error de conexión:", error);
-    alert("Error al conectar con el servidor");
-  }
-}
-</script>
+    async function probarPost() {
+      try {
+        const res = await fetch(URL, {
+          method: "POST",
+          body: JSON.stringify({ nombre: "Prueba", email: "test@test.com" }),
+          headers: { "Content-Type": "application/json" }
+        });
+        const data = await res.json();
+        console.log("✅ Respuesta POST:", data);
+        alert("POST OK: " + JSON.stringify(data));
+      } catch (err) {
+        console.error("❌ Error POST:", err);
+        alert("Error POST: " + err);
+      }
+    }
+  </script>
 </body>
 </html>
