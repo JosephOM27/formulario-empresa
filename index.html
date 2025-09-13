@@ -5,11 +5,35 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Formulario - Empresa</title>
   <style>
-    body{font-family:Arial,Helvetica,sans-serif;max-width:700px;margin:30px auto;padding:0 16px;}
-    label{display:block;margin:10px 0;}
-    input, textarea {width:100%;padding:8px;border:1px solid #ccc;border-radius:4px;}
-    button{padding:10px 14px;border:none;border-radius:6px;background:#0b74de;color:white;font-weight:600;}
-    #status{margin-top:12px;}
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      max-width: 700px;
+      margin: 30px auto;
+      padding: 0 16px;
+    }
+    label {
+      display: block;
+      margin: 10px 0;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      padding: 10px 14px;
+      border: none;
+      border-radius: 6px;
+      background: #0b74de;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    #status {
+      margin-top: 12px;
+      font-weight: 600;
+    }
   </style>
 </head>
 <body>
@@ -36,42 +60,38 @@
   <div id="status"></div>
 
   <script>
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzJRdhaQ5vB9WgK3nA3xFtFh7PhE6ozrrUf5TLUywfrD91ZZf5_EEL9lDIaft-AgrEfng/exec'; // <- reemplaza
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzJRdhaQ5vB9WgK3nA3xFtFh7PhE6ozrrUf5TLUywfrD91ZZf5_EEL9lDIaft-AgrEfng/exec"; // tu URL /exec
 
-    document.getElementById('myForm').addEventListener('submit', async function(e){
+    document.getElementById("myForm").addEventListener("submit", async function(e){
       e.preventDefault();
-      document.getElementById('status').textContent = 'Enviando...';
+      const statusEl = document.getElementById("status");
+      statusEl.textContent = "Enviando...";
 
       const payload = {
-        access_key: document.getElementById('access_key').value.trim(),
-        name: document.getElementById('name').value.trim(),
-        email: document.getElementById('email').value.trim(),
-        phone: document.getElementById('phone').value.trim(),
-        note: document.getElementById('note').value.trim()
+        access_key: document.getElementById("access_key").value.trim(),
+        name: document.getElementById("name").value.trim(),
+        email: document.getElementById("email").value.trim(),
+        phone: document.getElementById("phone").value.trim(),
+        note: document.getElementById("note").value.trim()
       };
-
-      // Validación mínima
-      if (!payload.access_key) {
-        document.getElementById('status').textContent = 'Debe ingresar la clave.';
-        return;
-      }
 
       try {
         const res = await fetch(SCRIPT_URL, {
-          method: 'POST',
-          headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify(payload),
-          mode: 'cors'
+          method: "POST",
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify(payload)
         });
+
         const json = await res.json();
-        if (json.status === 'success') {
-          document.getElementById('status').textContent = 'Enviado correctamente.';
-          document.getElementById('myForm').reset();
+
+        if (json.status === "success") {
+          statusEl.textContent = "✅ Enviado correctamente.";
+          document.getElementById("myForm").reset();
         } else {
-          document.getElementById('status').textContent = 'Error: ' + (json.message || 'Respuesta inválida.');
+          statusEl.textContent = "⚠️ Error: " + (json.message || "Respuesta inválida.");
         }
       } catch (err) {
-        document.getElementById('status').textContent = 'Error de conexión: ' + err.message;
+        statusEl.textContent = "❌ Error de conexión: " + err.message;
       }
     });
   </script>
