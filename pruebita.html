@@ -2,18 +2,23 @@
 <html lang="es">
 <body>
   <button onclick="test()">Probar POST</button>
-  <script>
-    fetch("https://script.google.com/macros/s/AKfycbxnH7kDHQG2S9s_rgJkc8_46uzRXpwz4aILr4_F51RTnDfHDwXCYBSkxUIbF_2VpqiHhA/exec", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify({ test: "hola" })
-})
-.then(res => res.json())
-.then(data => console.log("✅ Respuesta:", data))
-.catch(err => console.error("❌ Error:", err));
+  <script>function doPost(e) {
+  return ContentService.createTextOutput(
+    JSON.stringify({ ok: true, message: "POST funciona" })
+  )
+  .setMimeType(ContentService.MimeType.JSON)
+  .setHeader("Access-Control-Allow-Origin", "*")
+  .setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+  .setHeader("Access-Control-Allow-Headers", "Content-Type");
+}
 
-  </script>
+function doGet(e) {
+  return ContentService.createTextOutput(
+    JSON.stringify({ ok: true, message: "GET funciona" })
+  )
+  .setMimeType(ContentService.MimeType.JSON)
+  .setHeader("Access-Control-Allow-Origin", "*");
+}
+</script>
 </body>
 </html>
