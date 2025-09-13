@@ -36,52 +36,49 @@
     <p id="respuesta"></p>
   </form>
 
-  <script>
-    const form = document.getElementById('formulario');
-    const respuesta = document.getElementById('respuesta');
+ <script>
+  const form = document.getElementById('formulario');
+  const respuesta = document.getElementById('respuesta');
 
-    form.addEventListener('submit', async function (e) {
-      e.preventDefault();
+  form.addEventListener('submit', async function (e) {
+    e.preventDefault();
 
-      // Convertir los datos del formulario a URLSearchParams
-      const formData = new FormData(form);
-      const params = new URLSearchParams();
+    const formData = {
+      name: form.elements["name"].value,
+      email: form.elements["email"].value,
+      phone: form.elements["phone"].value,
+      note: form.elements["note"].value,
+      access_key: "Prueba_123"
+    };
 
-      for (const [key, value] of formData.entries()) {
-        params.append(key, value);
-      }
+    try {
+      const response = await fetch("https://script.google.com/macros/s/AKfycbwWT0QLnpB0qQgY1oWS0aPFVEyGIGLaSZKAPhOWxt8X3JU63COXKQFTY7u7xdQQsLSNoA/exec", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(formData)
+      });
 
-      // Agregar la clave de acceso
-      params.append("access_key", "Prueba_123");
+      const data = await response.json();
 
-      try {
-        const response = await fetch("https://script.google.com/macros/s/AKfycbwWT0QLnpB0qQgY1oWS0aPFVEyGIGLaSZKAPhOWxt8X3JU63COXKQFTY7u7xdQQsLSNoA/exec", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded"
-          },
-          body: params.toString()
-        });
-
-        // Intentar convertir la respuesta a JSON
-        const data = await response.json();
-
-        if (data.status === "success") {
-          respuesta.textContent = "✅ Enviado correctamente.";
-          respuesta.className = "success";
-          form.reset();
-        } else {
-          respuesta.textContent = "❌ Error: " + (data.message || "Error desconocido.");
-          respuesta.className = "error";
-        }
-
-      } catch (error) {
-        respuesta.textContent = "❌ Error al enviar: " + error.message;
+      if (data.status === "success") {
+        respuesta.textContent = "✅ Enviado correctamente.";
+        respuesta.className = "success";
+        form.reset();
+      } else {
+        respuesta.textContent = "❌ Error: " + (data.message || "Error desconocido.");
         respuesta.className = "error";
-        console.error("Error en fetch:", error); // Ayuda en consola para depuración
       }
-    });
-  </script>
+
+    } catch (error) {
+      respuesta.textContent = "❌ Error al enviar: " + error.message;
+      respuesta.className = "error";
+      console.error("Error en fetch:", error);
+    }
+  });
+</script>
+
 
 </body>
 </html>
