@@ -60,40 +60,31 @@
   <div id="status"></div>
 
   <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyDJsheHSXGp4vqPnKBJVnZW9g5SQ8-N1HcRqOqxy2UdN7DC73aBut7vnvg52l-g35oRA/exec"; // tu URL /exec
+async function enviarDatos() {
+  const data = {
+    nombre: document.getElementById("nombre").value,
+    email: document.getElementById("email").value,
+    mensaje: document.getElementById("mensaje").value
+  };
 
-    document.getElementById("myForm").addEventListener("submit", async function(e){
-      e.preventDefault();
-      const statusEl = document.getElementById("status");
-      statusEl.textContent = "Enviando...";
-
-      const payload = {
-        access_key: document.getElementById("access_key").value.trim(),
-        name: document.getElementById("name").value.trim(),
-        email: document.getElementById("email").value.trim(),
-        phone: document.getElementById("phone").value.trim(),
-        note: document.getElementById("note").value.trim()
-      };
-
-      try {
-        const res = await fetch(SCRIPT_URL, {
-          method: "POST",
-          headers: {"Content-Type": "application/json"},
-          body: JSON.stringify(payload)
-        });
-
-        const json = await res.json();
-
-        if (json.status === "success") {
-          statusEl.textContent = "✅ Enviado correctamente.";
-          document.getElementById("myForm").reset();
-        } else {
-          statusEl.textContent = "⚠️ Error: " + (json.message || "Respuesta inválida.");
-        }
-      } catch (err) {
-        statusEl.textContent = "❌ Error de conexión: " + err.message;
+  try {
+    const response = await fetch("https://script.google.com/macros/s/AKfycbyDJsheHSXGp4vqPnKBJVnZW9g5SQ8-N1HcRqOqxy2UdN7DC73aBut7vnvg52l-g35oRA/exec", {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json"
       }
     });
-  </script>
+
+    const result = await response.json();
+    console.log(result);
+    alert(result.message);
+
+  } catch (error) {
+    console.error("❌ Error de conexión:", error);
+    alert("Error al conectar con el servidor");
+  }
+}
+</script>
 </body>
 </html>
