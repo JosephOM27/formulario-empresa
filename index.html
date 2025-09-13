@@ -1,72 +1,25 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Formulario - Empresa</title>
-<style>
-  body {font-family:Arial,sans-serif; max-width:700px; margin:30px auto; padding:0 16px;}
-  label {display:block; margin:10px 0;}
-  input, textarea {width:100%; padding:8px; border:1px solid #ccc; border-radius:4px;}
-  button {padding:10px 14px; border:none; border-radius:6px; background:#0b74de; color:white; font-weight:600;}
-  #status {margin-top:12px;}
-</style>
-</head>
-<body>
-<h2>Ingreso de datos</h2>
-<form id="myForm">
-  <label>Nombre
-    <input id="name" name="name" required />
-  </label>
-  <label>Email
-    <input id="email" name="email" type="email" required />
-  </label>
-  <label>Teléfono
-    <input id="phone" name="phone" />
-  </label>
-  <label>Comentario
-    <textarea id="note" name="note" rows="3"></textarea>
-  </label>
-  <label>Clave de acceso
-    <input id="access_key" name="access_key" type="password" required placeholder="Ingresa la clave" />
-  </label>
-  <button type="submit">Enviar</button>
-</form>
-
-<div id="status"></div>
-
-<script>
-const SCRIPT_PROXY_URL = 'https://pruebaform.ocadiomoreno1.workers.dev/'; // tu Worker proxy
-
-document.getElementById('myForm').addEventListener('submit', async function(e){
-  e.preventDefault();
-  document.getElementById('status').textContent = 'Enviando...';
-
-  const payload = {
-    access_key: document.getElementById('access_key').value.trim(),
-    name: document.getElementById('name').value.trim(),
-    email: document.getElementById('email').value.trim(),
-    phone: document.getElementById('phone').value.trim(),
-    note: document.getElementById('note').value.trim()
-  };
-
-  try {
-    const res = await fetch(SCRIPT_PROXY_URL, {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify(payload)
-    });
-    const json = await res.json();
-    if (json.status === 'success') {
-      document.getElementById('status').textContent = 'Enviado correctamente.';
-      document.getElementById('myForm').reset();
+<script>fetch('https://script.google.com/macros/s/AKfycb.../exec', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    access_key: 'Prueba_123',
+    name: 'Juan Pérez',
+    email: 'juan@mail.com',
+    phone: '987654321',
+    note: 'Desde GitHub Pages 🎉'
+  })
+})
+  .then(res => res.json())
+  .then(data => {
+    if (data.status === 'success') {
+      alert('Datos guardados correctamente');
     } else {
-      document.getElementById('status').textContent = 'Error: ' + (json.message || 'Respuesta inválida.');
+      alert('Error: ' + data.message);
     }
-  } catch (err) {
-    document.getElementById('status').textContent = 'Error de conexión: ' + err.message;
-  }
-});
+  })
+  .catch(err => {
+    console.error('Error al enviar:', err);
+  });
 </script>
-</body>
-</html>
